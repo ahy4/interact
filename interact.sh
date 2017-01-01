@@ -6,13 +6,12 @@ history=""
 statement=""
 
 function cmdline() {
-  printf '\r%s' "                                                                           "
+  printf '\r%s' "                                                                      "
   printf '\r%s' ""
-  # echo $1
   printf '\r%s' "$1"
 }
 
-while IFS= read -r -n1 -s char; do
+while IFS= read -r -n1 -s char; do # １文字ずつ入力を読む
   if [[ $char == $'\x1b' ]]; then # arrow key.
     read -r -n2 -s rest
     char+="$rest"
@@ -26,16 +25,14 @@ while IFS= read -r -n1 -s char; do
 
   case $char in
 
-    $'\x1b\x5b\x41' ) # ↑  xxd
+    $'\x1b\x5b\x41' ) # ↑ # read key; echo "$key" | hexdump で確認した
       # 一つ上のhistoryを表示
       (( count++ ))
-      # count=`expr $count + 1`
       cmdline "`echo -ne $history | tail -n $count | head -n1`" ;;
 
     $'\x1b\x5b\x42' ) # ↓
       if [ $count -gt 0 ] ; then
         (( count-- ))
-        # count=`expr $count - 1`
         cmdline
       fi
       cmdline "`echo -ne $history | tail -n $count | head -n1`" ;;
@@ -44,21 +41,13 @@ while IFS= read -r -n1 -s char; do
 
     $'\x1b\x5b\x44' ) ;; # ←
 
-    [0-9] )
-      echo "cmd"$char &&
-      # echo -e "history: "$history &&
-      count=0
-      history=$history"cmd"$char"\n" ;;
-
-    c )
-      cmdline ;;
-
     enter )
       echo ""
       line=$cmd" "$statement
       `echo $line`
-      statement=""
-       ;;
+      count=0
+      history=$history$statement"\n"
+      statement="" ;;
 
     backspace )
       len=$(( ${#statement} - 1 ))
