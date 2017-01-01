@@ -5,11 +5,14 @@ count=0
 history=""
 statement=""
 
+### $1: 表示文字列
+### $1を表示し、statementを$1として更新する
 function cmdline() {
   printf '\r%s' "                                                                      " # 文字クリア
   printf '\r%s' "" # カーソル先頭
   # printf '\r%s' "\033[34m$cmd\033[00m$1"
   printf "\033[34m[ $cmd ] >> \033[00m$1"
+  statement=$1
 }
 
 cmdline
@@ -50,34 +53,20 @@ while IFS= read -r -n1 -s char; do # １文字ずつ入力を読む
       `echo $line`
       count=0
       history=$history$statement"\n"
-      statement=""
       cmdline ;;
 
     backspace )
       len=$(( ${#statement} - 1 ))
       if [ $len -ge 1 ] ; then
-        statement=`echo -ne $statement | cut -c 1-$len`
+        cmdline "`echo -ne $statement | cut -c 1-$len`"
       elif [ $len -eq 0 ] ; then
-        statement=""
-      fi
-      cmdline "$statement" ;;
+        cmdline
+      fi ;;
 
     space )
-      statement=$statement" "
-      cmdline "$statement" ;;
+      cmdline "$statement " ;;
 
     * )
-      statement=$statement$char
-      cmdline "$statement" ;;
+      cmdline "$statement$char" ;;
   esac
 done
-
-
-
-# read args
-# while test "$args" != "a"
-# do
-#   line=$cmd" "$args
-#   `echo $line`
-#   read args
-# done
