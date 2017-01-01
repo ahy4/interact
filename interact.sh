@@ -3,11 +3,13 @@
 cmd=$1
 count=0
 history=""
+statement=""
 
 function cmdline() {
-  printf '\r%s' "                                    "
+  printf '\r%s' "                                                                           "
   printf '\r%s' ""
-  printf '\r%s' $1
+  # echo $1
+  printf '\r%s' "$1"
 }
 
 while IFS= read -r -n1 -s char; do
@@ -26,15 +28,17 @@ while IFS= read -r -n1 -s char; do
 
     $'\x1b\x5b\x41' ) # ↑  xxd
       # 一つ上のhistoryを表示
-      count=`expr $count + 1`
-      cmdline `echo -ne $history | tail -n $count | head -n1` ;;
+      (( count++ ))
+      # count=`expr $count + 1`
+      cmdline "`echo -ne $history | tail -n $count | head -n1`" ;;
 
     $'\x1b\x5b\x42' ) # ↓
       if [ $count -gt 0 ] ; then
-        count=`expr $count - 1`
+        (( count-- ))
+        # count=`expr $count - 1`
         cmdline
       fi
-      cmdline `echo -ne $history | tail -n $count | head -n1` ;;
+      cmdline "`echo -ne $history | tail -n $count | head -n1`" ;;
 
     $'\x1b\x5b\x43' ) ;; # →
 
@@ -50,17 +54,28 @@ while IFS= read -r -n1 -s char; do
       cmdline ;;
 
     enter )
-      echo "enter" ;;
+      echo ""
+      line=$cmd" "$statement
+      `echo $line`
+      statement=""
+       ;;
 
     backspace )
-      echo "backspace" ;;
+      len=$(( ${#statement} - 1 ))
+      if [ $len -ge 1 ] ; then
+        statement=`echo -ne $statement | cut -c 1-$len`
+      elif [ $len -eq 0 ] ; then
+        statement=""
+      fi
+      cmdline "$statement" ;;
 
     space )
-      echo "space"
-      echo -n " " ;;
+      statement=$statement" "
+      cmdline "$statement" ;;
 
     * )
-      echo -n $char ;;
+      statement=$statement$char
+      cmdline "$statement" ;;
   esac
 done
 
