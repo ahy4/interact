@@ -20,20 +20,7 @@
 
 ### 実行例
 
-```sh
-$ interact git
-[ git ] >> status
-On branch develop
-Your branch is up-to-date with 'origin/develop'.
-Changes not staged for commit:
-...
-[ git ] >> log
-commit 7cc1fefa526d5245d5fb3914e6c40a709671e4fc
-Merge: 2f2aa4d2b 23f8e39ec
-Author: LimeStreem <LimeStreem@gmail.com>
-Date:   Fri Apr 1 01:57:27 2016 +0900
-...
-```
+![gif](https://i.gyazo.com/17456ab296c0ae2b9f3121c5be3e493c.gif)
 
 ## たのむ
 
