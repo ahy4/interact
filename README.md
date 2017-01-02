@@ -1,4 +1,4 @@
-# interact
+# interact (v0.2.0)
 
 ## 概要
 
@@ -12,11 +12,15 @@
 
 ### インストール
 
-このレポジトリの`interact`を`/usr/local/bin`にぶちこんで、
+#### mac
 
-`chmod +x /usr/local/bin/interact`
+```sh
+curl -sL https://raw.githubusercontent.com/ahyahya/interact/master/install.sh | bash
+```
 
-する
+#### linux
+
+rlwrapをyumかなにかでインストールして、install.shをみながらやれば入ると思います。多分
 
 ### 実行例
 
